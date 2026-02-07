@@ -1,15 +1,22 @@
 {
-    "name": "Govi Map App",
-    "short_name": "GoviMap",
-    "start_url": "index.html",
-    "display": "standalone",
-    "background_color": "#ffffff",
-    "theme_color": "#2e7d32",
-    "icons": [
-      {
-        "src": "https://cdn-icons-png.flaticon.com/512/2850/2850311.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ]
-  }
+  "name": "Pro Govi Measure",
+  "short_name": "Govi Measure",
+  "description": "GPS & Map based land measuring app for farmers",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#2f8d34",
+  "theme_color": "#2f8d34",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}
