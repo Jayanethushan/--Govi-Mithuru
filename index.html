@@ -316,6 +316,14 @@
         <i class="fas fa-walking"></i>
     </button>
 
+     <button class="map-icon-btn" onclick="map.zoomIn()">
+    <i class="fas fa-plus"></i>
+</button>
+
+<button class="map-icon-btn" onclick="map.zoomOut()">
+    <i class="fas fa-minus"></i>
+</button>           
+
 </div>
             
         </div>
@@ -437,7 +445,14 @@
         }
 
         // Map Initialization
-        var map = L.map('map', { zoomControl: false, maxZoom: 21 }).setView([7.8731, 80.7718], 15);
+       var map = L.map('map', {
+    zoomControl: false,
+    maxZoom: 21,
+    dragging: true,
+    touchZoom: true,
+    doubleClickZoom: true,
+    boxZoom: false
+});.setView([7.8731, 80.7718], 15);
         L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', { maxZoom: 21, subdomains:['mt0','mt1','mt2','mt3'] }).addTo(map);
 
         var drawnItems = new L.FeatureGroup();
@@ -456,8 +471,19 @@
             layer.on('edit', function() { updateCalculations(layer); });
         });
 
-        function showDrawTool(tool) { new L.Draw.Polygon(map, drawControl.options.draw.polygon).enable(); }
+    let activeDrawer = null;
 
+function showDrawTool(tool) {
+
+    // map dragging disable (one finger)
+    map.dragging.disable();
+    map.tap && map.tap.disable();
+
+    activeDrawer = new L.Draw.Polygon(map, drawControl.options.draw.polygon);
+    activeDrawer.enable();
+}
+
+        
         async function searchPlace() {
             let q = document.getElementById('search-input').value;
             if(!q) return;
@@ -610,10 +636,16 @@ function undoLastPoint() {
         }
     });
 }
+
+map.on(L.Draw.Event.DRAWSTOP, function () {
+    map.dragging.enable();
+    map.tap && map.tap.enable();
+});
         
     </script>
 </body>
 </html>
+
 
 
 
