@@ -292,21 +292,32 @@
                 <input type="text" id="search-input" placeholder="නගරය සොයන්න (Search City)...">
                 <button onclick="searchPlace()"><i class="fa fa-search"></i></button>
             </div>
-            
+
             <div class="map-icons-container">
-                <button class="map-icon-btn" onclick="showDrawTool('polygon')" title="බහුඅස්රයක් ඇඳීම">
-                    <i class="fas fa-draw-polygon"></i>
-                </button>
-                <button class="map-icon-btn" onclick="clearMap()" title="හිස් කරන්න">
-                    <i class="fas fa-eraser"></i>
-                </button>
-                <button class="map-icon-btn" onclick="locateMe()" title="මගේ ස්ථානය">
-                    <i class="fas fa-location-arrow"></i>
-                </button>
-                <button class="map-icon-btn" id="gps-track-btn" onclick="toggleTracking()" title="GPS මැනීම">
-                    <i class="fas fa-walking"></i>
-                </button>
-            </div>
+
+    <button class="map-icon-btn" onclick="showDrawTool('polygon')" title="Draw Area">
+        <i class="fas fa-draw-polygon"></i>
+    </button>
+
+    <!-- 🔙 UNDO BUTTON -->
+    <button class="map-icon-btn" onclick="undoLastPoint()" title="Undo">
+        <i class="fas fa-undo"></i>
+    </button>
+
+    <button class="map-icon-btn" onclick="clearMap()" title="Clear">
+        <i class="fas fa-eraser"></i>
+    </button>
+
+    <button class="map-icon-btn" onclick="locateMe()" title="My Location">
+        <i class="fas fa-location-arrow"></i>
+    </button>
+
+    <button class="map-icon-btn" id="gps-track-btn" onclick="toggleTracking()" title="GPS Track">
+        <i class="fas fa-walking"></i>
+    </button>
+
+</div>
+            
         </div>
         
         <div id="map"></div>
@@ -561,4 +572,5 @@
     </script>
 </body>
 </html>
+
 
