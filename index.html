@@ -569,8 +569,51 @@
                 printViaBluetooth(billText);
             }
         }
+
+function undoLastPoint() {
+
+    // phone vibrate (optional)
+    if (navigator.vibrate) navigator.vibrate(20);
+
+    // GPS Tracking undo
+    if (isTracking && trackPoints.length > 0) {
+        trackPoints.pop();
+        trackPoly.setLatLngs(trackPoints);
+
+        if (trackPoints.length > 2) {
+            updateCalculations(trackPoly);
+        } else {
+            currentAcres = 0;
+            document.getElementById('acres-disp').innerText = '0.00';
+            document.getElementById('final-acres').innerText = '0.00';
+            document.getElementById('final-total').innerText = '0.00';
+        }
+        return;
+    }
+
+    // Draw polygon undo
+    drawnItems.eachLayer(layer => {
+        let latlngs = layer.getLatLngs();
+
+        if (latlngs.length && latlngs[0].length > 0) {
+            latlngs[0].pop();
+            layer.setLatLngs(latlngs);
+
+            if (latlngs[0].length > 2) {
+                updateCalculations(layer);
+            } else {
+                currentAcres = 0;
+                document.getElementById('acres-disp').innerText = '0.00';
+                document.getElementById('final-acres').innerText = '0.00';
+                document.getElementById('final-total').innerText = '0.00';
+            }
+        }
+    });
+}
+        
     </script>
 </body>
 </html>
+
 
 
