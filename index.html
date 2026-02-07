@@ -230,58 +230,15 @@
         
         #bill-ready { display: none; background: white; padding: 40px; color: black; }
         @media print {
-    /* කඩදාසියේ පළල 58mm ලෙස ස්ථාවර කිරීම */
-    @page {
-        size: 58mm auto;
-        margin: 0;
-    }
-
-    body {
-        margin: 0;
-        padding: 0;
-        width: 58mm; /* ප්‍රින්ටර් එකේ පළල */
-    }
-
-    /* බිල්පත හැර අනෙක් සියල්ල ඉවත් කිරීම */
-    body > *:not(#bill-ready) {
-        display: none !important;
-    }
-
-    #bill-ready {
-        display: block !important;
-        width: 54mm; /* කඩදාසියේ අයිනටම නොයෑමට (Padding සඳහා ඉඩ තබා) */
-        padding: 2mm;
-        margin: 0 auto;
-        font-family: 'Courier New', Courier, monospace; /* Thermal printer වලට වඩාත් ගැලපේ */
-        font-size: 9pt; /* පටු කඩදාසියක් නිසා Font size එක අඩු කළා */
-        line-height: 1.2;
-    }
-
-    /* Table සැකසුම් (58mm වලට ගැලපෙන ලෙස) */
-    #bill-ready table {
-        width: 100%;
-        border-collapse: collapse;
-        font-size: 8pt;
-    }
-
-    #bill-ready table th, 
-    #bill-ready table td {
-        border-bottom: 1px dashed #000; /* තද ඉරි වෙනුවට තිත් ඉරි පාවිච්චිය ලස්සනයි */
-        padding: 4px 0;
-        text-align: left;
-    }
-
-    /* පින්තූර හෝ ලෝගෝ තිබේ නම් */
-    #bill-ready img {
-        max-width: 100%;
-        height: auto;
-    }
-
-    /* ප්‍රින්ට් එක අවසානයේ කඩදාසිය කැපීමට ඉඩ තැබීම */
-    .cut-margin {
-        height: 20px;
-    }
-}
+            @page { size: 58mm auto; margin: 0; }
+            body { margin: 0; padding: 0; width: 58mm; }
+            body > *:not(#bill-ready) { display: none !important; }
+            #bill-ready { display: block !important; width: 54mm; padding: 2mm; margin: 0 auto; font-family: 'Courier New', Courier, monospace; font-size: 9pt; line-height: 1.2; }
+            #bill-ready table { width: 100%; border-collapse: collapse; font-size: 8pt; }
+            #bill-ready table th, #bill-ready table td { border-bottom: 1px dashed #000; padding: 4px 0; text-align: left; }
+            #bill-ready img { max-width: 100%; height: auto; }
+            .cut-margin { height: 20px; }
+        }
     </style>
 </head>
 <body>
@@ -296,6 +253,9 @@
             <div class="map-icons-container">
                 <button class="map-icon-btn" onclick="showDrawTool('polygon')" title="බහුඅස්රයක් ඇඳීම">
                     <i class="fas fa-draw-polygon"></i>
+                </button>
+                <button class="map-icon-btn" onclick="undoLastPoint()" title="ආපස්සට">
+                    <i class="fas fa-undo"></i>
                 </button>
                 <button class="map-icon-btn" onclick="clearMap()" title="හිස් කරන්න">
                     <i class="fas fa-eraser"></i>
@@ -437,15 +397,48 @@
             edit: { featureGroup: drawnItems }
         });
 
+        // --- Drawing Logic with Multitouch Fix ---
+        let currentDrawer = null;
+        let isMultiTouching = false;
+
+        function showDrawTool(tool) {
+            if(currentDrawer) currentDrawer.disable();
+            currentDrawer = new L.Draw.Polygon(map, drawControl.options.draw.polygon);
+            currentDrawer.enable();
+        }
+
+        // ඇඟිලි දෙකකින් මැප් එක Zoom/Move කරන විට ලකුණු වැටීම වැළැක්වීම
+        map.on('touchstart', function (e) {
+            if (e.originalEvent.touches && e.originalEvent.touches.length > 1) {
+                isMultiTouching = true;
+                if (currentDrawer) currentDrawer.disable();
+            }
+        });
+
+        map.on('touchend', function (e) {
+            if (isMultiTouching) {
+                // කුඩා ප්‍රමාදයකින් පසුව නැවත enable කරන්න එවිට වැරදි ලකුණු වැටීම වැළැක්වේ
+                setTimeout(() => {
+                    if (currentDrawer) currentDrawer.enable();
+                    isMultiTouching = false;
+                }, 150);
+            }
+        });
+
+        function undoLastPoint() {
+            if (currentDrawer && currentDrawer.enabled()) {
+                currentDrawer.deleteLastVertex();
+            }
+        }
+
         map.on(L.Draw.Event.CREATED, function (e) {
             drawnItems.clearLayers();
             var layer = e.layer;
             drawnItems.addLayer(layer);
             updateCalculations(layer);
             layer.on('edit', function() { updateCalculations(layer); });
+            currentDrawer = null; 
         });
-
-        function showDrawTool(tool) { new L.Draw.Polygon(map, drawControl.options.draw.polygon).enable(); }
 
         async function searchPlace() {
             let q = document.getElementById('search-input').value;
@@ -561,4 +554,3 @@
     </script>
 </body>
 </html>
-
