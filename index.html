@@ -11,140 +11,74 @@
     
     <style>
         :root {
-            --p-color: #10b981;
-            --p-color-dark: #059669;
-            --p-color-light: #34d399;
-            --bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --bg-dark: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            --txt: #ffffff;
-            --txt-secondary: #e2e8f0;
-            --card: rgba(255, 255, 255, 0.1);
-            --glass: rgba(255, 255, 255, 0.08);
-            --glass-border: rgba(255, 255, 255, 0.2);
-            --shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            --shadow-light: 0 4px 20px rgba(0, 0, 0, 0.1);
+            --p-color: #2f8d34;
+            --s-color: #2e9231;
+            --bg: #f4f4f4;
+            --txt: #333;
+            --card: rgba(255, 255, 255, 0.85);
+            --glass: rgba(255, 255, 255, 0.021);
+            --glass-border: rgba(255, 255, 255, 0.4);
         }
-
         .dark-mode {
-            --bg: var(--bg-dark);
-            --txt: #f1f5f9;
-            --card: rgba(30, 41, 59, 0.4);
-            --glass: rgba(30, 41, 59, 0.3);
-            --glass-border: rgba(148, 163, 184, 0.2);
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+            --p-color: #48b64e;
+            --s-color: #207023;
+            --bg: #121212;
+            --txt: #e0e0e0;
+            --card: rgba(30, 30, 30, 0.85);
+            --glass: rgba(0, 0, 0, 0.4);
+            --glass-border: rgba(255, 255, 255, 0.1);
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            margin: 0;
             background: var(--bg);
             color: var(--txt);
-            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: 0.3s;
             overflow: hidden;
-            min-height: 100vh;
-            backdrop-filter: blur(10px);
         }
-
-        /* Tab Bar - Glassmorphism */
+        
+        /* Layout */
         .tab-bar {
             position: fixed;
-            bottom: 20px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 90%;
-            max-width: 400px;
-            background: var(--glass);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-radius: 20px;
+            bottom: 0;
+            width: 100%;
+            background: var(--card);
+            backdrop-filter: blur(10px);
             display: flex;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow);
-            padding: 8px;
+            border-top: 1px solid var(--glass-border);
             z-index: 1000;
-            height: 70px;
-            overflow: hidden;
+            height: 65px;
         }
-
         .tab {
             flex: 1;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: var(--txt-secondary);
+            text-align: center;
+            padding: 10px;
+            color: #888;
             cursor: pointer;
             font-size: 12px;
-            transition: all 0.3s ease;
-            border-radius: 16px;
-            padding: 10px 5px;
-            position: relative;
-            overflow: hidden;
         }
-
+        .tab.active {
+            color: var(--p-color);
+            font-weight: bold;
+        }
         .tab i {
             font-size: 20px;
+            display: block;
             margin-bottom: 4px;
-            transition: all 0.3s ease;
         }
 
-        .tab.active {
-            color: white;
-            background: linear-gradient(135deg, var(--p-color), var(--p-color-dark));
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .tab.active i {
-            transform: translateY(-2px);
-        }
-
-        .tab::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .tab:active::before {
-            width: 100px;
-            height: 100px;
-        }
-
-        /* Pages */
         .page {
             display: none;
-            height: calc(100vh - 90px);
+            height: calc(100vh - 65px);
             overflow-y: auto;
-            padding: 20px;
-            animation: fadeIn 0.4s ease-out;
+            padding: 15px;
+            box-sizing: border-box;
         }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
         .page.active {
             display: block;
         }
-
-        /* Map Page */
+        
         #map {
             height: 100%;
             width: 100%;
@@ -152,438 +86,234 @@
             top: 0;
             left: 0;
             z-index: 1;
-            border-radius: 0;
         }
-
+        
+        /* Glassmorphism Map Overlay */
         .map-overlay {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            right: 20px;
+            top: 15px;
+            left: 10px;
+            right: 10px;
             z-index: 1000;
             pointer-events: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-
+        
         .search-container {
             pointer-events: auto;
             display: flex;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            padding: 5px;
+            background: var(--card);
+            backdrop-filter: blur(12px);
+            padding: 6px;
             border-radius: 50px;
-            box-shadow: var(--shadow);
-            max-width: 500px;
-            margin: auto;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            animation: slideDown 0.5s ease-out;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+            width: 90%;
+            max-width: 450px;
+            margin-bottom: 15px;
         }
-
-        @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
+        
         .search-container input {
             flex: 1;
             border: none;
-            padding: 12px 20px;
+            padding: 10px 18px;
             outline: none;
-            border-radius: 50px;
-            font-size: 14px;
             background: transparent;
+            color: var(--txt);
+            font-size: 14px;
         }
-
+        
         .search-container button {
             border: none;
-            background: linear-gradient(135deg, var(--p-color), var(--p-color-dark));
+            background: var(--p-color);
             color: white;
-            padding: 12px 20px;
-            border-radius: 50px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             cursor: pointer;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            transition: 0.3s;
         }
-
-        .search-container button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-        }
-
-        .search-container button:active {
-            transform: translateY(0);
-        }
-
-        .map-controls {
-            position: absolute;
-            bottom: 100px;
-            right: 20px;
-            z-index: 1000;
+        
+        /* UI Buttons Container (Compact Row) */
+        .map-icons-container {
+            pointer-events: auto;
             display: flex;
-            flex-direction: column;
-            gap: 15px;
-            animation: slideIn 0.5s ease-out 0.2s both;
+            gap: 12px;
+            background: var(--glass);
+            backdrop-filter: blur(15px);
+            padding: 10px 18px;
+            border-radius: 40px;
+            border: 1px solid var(--glass-border);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
         }
-
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateX(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .m-btn {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            width: 60px;
-            height: 60px;
+        
+        .map-icon-btn {
+            background: var(--card);
+            width: 45px;
+            height: 45px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: var(--shadow);
-            color: var(--p-color-dark);
+            color: var(--p-color);
             cursor: pointer;
-            pointer-events: auto;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 22px;
-            position: relative;
-            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            font-size: 18px;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
-
-        .m-btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(16, 185, 129, 0.1);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
+        
+        .map-icon-btn:active {
+            transform: scale(0.9);
         }
-
-        .m-btn:active::before {
-            width: 100px;
-            height: 100px;
-        }
-
-        .m-btn:hover {
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .m-btn:active {
-            transform: translateY(0) scale(0.98);
-        }
-
-        .m-btn.rec {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
+        
+        .map-icon-btn.rec {
+            background: #ef5350;
             color: white;
             animation: pulse 1.5s infinite;
+            border: none;
         }
-
-        @keyframes pulse {
-            0%, 100% {
-                box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7);
-            }
-            50% {
-                box-shadow: 0 0 0 15px rgba(239, 68, 68, 0);
-            }
-        }
-
-        .info-panel {
+        
+        /* Floating Info Panel */
+        .info-display {
             position: absolute;
-            bottom: 100px;
-            left: 20px;
+            bottom: 80px;
+            left: 50%;
+            transform: translateX(-50%);
             z-index: 1000;
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            color: #1e293b;
-            padding: 16px;
-            border-radius: 16px;
+            background: rgba(46, 125, 50, 0.9);
+            backdrop-filter: blur(8px);
+            color: white;
+            padding: 10px 25px;
+            border-radius: 30px;
             font-size: 14px;
             pointer-events: auto;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            box-shadow: var(--shadow);
-            animation: slideInLeft 0.5s ease-out 0.1s both;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
-        @keyframes slideInLeft {
-            from {
-                opacity: 0;
-                transform: translateX(-20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        .info-panel #acres-disp {
-            font-size: 24px;
-            font-weight: bold;
-            color: var(--p-color-dark);
-            display: block;
-            margin-bottom: 4px;
-        }
-
-        .info-panel #sinhala-disp {
-            color: #64748b;
-            font-size: 13px;
-        }
-
-        /* Cards - Glassmorphism */
+        /* Forms & Cards */
         .card {
             background: var(--card);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 24px;
+            backdrop-filter: blur(10px);
+            padding: 20px;
             border-radius: 20px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow);
+            margin-bottom: 15px;
             border: 1px solid var(--glass-border);
-            animation: cardAppear 0.6s ease-out;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
-
-        @keyframes cardAppear {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
-        h2 {
-            color: white;
-            margin-bottom: 20px;
-            font-size: 24px;
-            font-weight: 600;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
-            animation: fadeIn 0.5s ease-out;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--txt-secondary);
-            font-size: 14px;
-            font-weight: 500;
-        }
-
+        
+        .input-group { margin-bottom: 15px; }
+        
         input {
             width: 100%;
-            padding: 15px;
+            padding: 12px;
             border: 1px solid var(--glass-border);
             border-radius: 12px;
-            background: rgba(255, 255, 255, 0.1);
+            background: rgba(255,255,255,0.5);
             color: var(--txt);
-            font-size: 15px;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            box-sizing: border-box;
         }
 
-        input:focus {
-            outline: none;
-            border-color: var(--p-color-light);
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
-            transform: translateY(-2px);
+        .language-switch { display: flex; gap: 10px; margin-bottom: 15px; }
+        .language-btn {
+            flex: 1; padding: 10px; border: 2px solid var(--p-color);
+            border-radius: 12px; background: transparent; color: var(--p-color);
+            cursor: pointer; font-weight: bold;
         }
+        .language-btn.active { background: var(--p-color); color: white; }
 
-        input::placeholder {
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        hr {
-            border: none;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--glass-border), transparent);
-            margin: 25px 0;
-        }
-
-        /* Bill Page Specific */
-        #final-total {
-            font-size: 32px;
-            font-weight: bold;
-            color: white;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-        }
-
-        #final-acres {
-            color: var(--p-color-light);
-            font-weight: 500;
-        }
-
-        .btn {
-            border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            text-align: center;
-            display: block;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-        }
-
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 0;
-            height: 0;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.2);
-            transform: translate(-50%, -50%);
-            transition: width 0.6s, height 0.6s;
-        }
-
-        .btn:active::before {
-            width: 200px;
-            height: 200px;
-        }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
-        }
-
-        .btn:active {
-            transform: translateY(0);
-        }
-
-        /* Settings Page */
-        #page-settings .card label {
-            color: white;
-            font-size: 16px;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        /* Print Bill */
-        #bill-ready {
-            display: none;
-            background: white;
-            color: #1e293b;
-            padding: 40px;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 500px;
-            margin: 0 auto;
-            box-shadow: var(--shadow);
-        }
-
+        @keyframes pulse { 0% { box-shadow: 0 0 0 0px rgba(239, 83, 80, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(239, 83, 80, 0); } 100% { box-shadow: 0 0 0 0px rgba(239, 83, 80, 0); } }
+        
+        #bill-ready { display: none; background: white; padding: 40px; color: black; }
         @media print {
-            body * {
-                display: none;
-            }
-            #bill-ready, #bill-ready * {
-                display: block !important;
-            }
-            #bill-ready {
-                box-shadow: none;
-                margin: 0;
-                padding: 20px;
-            }
-        }
+    /* කඩදාසියේ පළල 58mm ලෙස ස්ථාවර කිරීම */
+    @page {
+        size: 58mm auto;
+        margin: 0;
+    }
 
-        /* Custom Scrollbar */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
+    body {
+        margin: 0;
+        padding: 0;
+        width: 58mm; /* ප්‍රින්ටර් එකේ පළල */
+    }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 4px;
-        }
+    /* බිල්පත හැර අනෙක් සියල්ල ඉවත් කිරීම */
+    body > *:not(#bill-ready) {
+        display: none !important;
+    }
 
-        ::-webkit-scrollbar-thumb {
-            background: var(--p-color);
-            border-radius: 4px;
-        }
+    #bill-ready {
+        display: block !important;
+        width: 54mm; /* කඩදාසියේ අයිනටම නොයෑමට (Padding සඳහා ඉඩ තබා) */
+        padding: 2mm;
+        margin: 0 auto;
+        font-family: 'Courier New', Courier, monospace; /* Thermal printer වලට වඩාත් ගැලපේ */
+        font-size: 9pt; /* පටු කඩදාසියක් නිසා Font size එක අඩු කළා */
+        line-height: 1.2;
+    }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--p-color-dark);
-        }
+    /* Table සැකසුම් (58mm වලට ගැලපෙන ලෙස) */
+    #bill-ready table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 8pt;
+    }
 
-        /* Loading Animation */
-        .loading {
-            display: inline-block;
-            width: 20px;
-            height: 20px;
-            border: 3px solid rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            border-top-color: var(--p-color);
-            animation: spin 1s ease-in-out infinite;
-        }
+    #bill-ready table th, 
+    #bill-ready table td {
+        border-bottom: 1px dashed #000; /* තද ඉරි වෙනුවට තිත් ඉරි පාවිච්චිය ලස්සනයි */
+        padding: 4px 0;
+        text-align: left;
+    }
 
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
+    /* පින්තූර හෝ ලෝගෝ තිබේ නම් */
+    #bill-ready img {
+        max-width: 100%;
+        height: auto;
+    }
 
-        /* Responsive */
-        @media (max-width: 480px) {
-            .tab-bar {
-                width: 95%;
-                height: 65px;
-                bottom: 10px;
-            }
-            
-            .m-btn {
-                width: 55px;
-                height: 55px;
-            }
-            
-            .page {
-                padding: 15px;
-            }
-        }
+    /* ප්‍රින්ට් එක අවසානයේ කඩදාසිය කැපීමට ඉඩ තැබීම */
+    .cut-margin {
+        height: 20px;
+    }
+}
     </style>
 </head>
 <body>
 
-    <!-- Your HTML content remains exactly the same -->
     <div id="page-map" class="page active" style="padding:0;">
         <div class="map-overlay">
             <div class="search-container">
                 <input type="text" id="search-input" placeholder="නගරය සොයන්න (Search City)...">
                 <button onclick="searchPlace()"><i class="fa fa-search"></i></button>
             </div>
+            
+            <div class="map-icons-container">
+                <button class="map-icon-btn" onclick="showDrawTool('polygon')" title="බහුඅස්රයක් ඇඳීම">
+                    <i class="fas fa-draw-polygon"></i>
+                </button>
+                <button class="map-icon-btn" onclick="clearMap()" title="හිස් කරන්න">
+                    <i class="fas fa-eraser"></i>
+                </button>
+                <button class="map-icon-btn" onclick="locateMe()" title="මගේ ස්ථානය">
+                    <i class="fas fa-location-arrow"></i>
+                </button>
+                <button class="map-icon-btn" id="gps-track-btn" onclick="toggleTracking()" title="GPS මැනීම">
+                    <i class="fas fa-walking"></i>
+                </button>
+            </div>
         </div>
         
         <div id="map"></div>
 
-        <div class="info-panel">
-            <span id="acres-disp">0.00</span> අක්කර<br>
+        <div class="info-display">
+            <b style="font-size: 18px;"><span id="acres-disp">0.00</span> <span class="lang-acres">අක්කර</span></b><br>
             <small id="sinhala-disp">ලකුණු කරන්න</small>
-        </div>
-        
-        <div class="map-controls">
-            <button class="m-btn" onclick="locateMe()"><i class="fa fa-crosshairs"></i></button>
-            <button id="track-btn" class="m-btn" onclick="toggleTracking()" title="GPS Tracking"><i class="fa fa-walking"></i></button>
-            <button class="m-btn" onclick="clearMap()"><i class="fa fa-trash-alt"></i></button>
         </div>
     </div>
 
@@ -591,41 +321,56 @@
         <h2 id="lang-bill-head">බිල්පත් විස්තර</h2>
         <div class="card">
             <div class="input-group">
-                <label>වැඩේ නම (Service Name):</label>
+                <label id="lang-service-name">වැඩේ නම (Service Name):</label>
                 <input type="text" id="job-name" placeholder="උදා: අස්වනු නෙලීම">
             </div>
             <div class="input-group">
-                <label>පාරිභෝගිකයාගේ නම:</label>
+                <label id="lang-customer-name">පාරිභෝගිකයාගේ නම:</label>
                 <input type="text" id="cust-name">
             </div>
             <div class="input-group">
-                <label>අක්කරයක මිල (රු):</label>
+                <label id="lang-unit-price">අක්කරයක මිල (රු):</label>
                 <input type="number" id="unit-price" value="25000" oninput="calcTotal()">
             </div>
-            <hr>
+            <hr style="opacity: 0.2;">
             <div style="text-align: center;">
-                <h3 style="color:var(--p-color-light); margin-bottom:5px;">මුළු මුදල: රු. <span id="final-total">0.00</span></h3>
-                <small>(අක්කර <span id="final-acres">0.00</span> ක් සඳහා)</small>
+                <h3 style="color:var(--p-color); margin-bottom:5px;"><span id="lang-total-amount">මුළු මුදල:</span> රු. <span id="final-total">0.00</span></h3>
+                <small>(<span id="lang-for-acres">අක්කර</span> <span id="final-acres">0.00</span> <span id="lang-for">ක් සඳහා</span>)</small>
             </div>
-            <button class="btn" style="width:100%; border-radius:12px; background:linear-gradient(135deg, var(--p-color), var(--p-color-dark)); color:white; margin-top:20px; padding:18px;" onclick="generateBill()">බිල්පත (Print)</button>
+            <button class="btn m-btn" style="width:100%; border-radius:12px; padding:15px; border:none; background:var(--p-color); color:white; margin-top:15px; font-weight:bold;" onclick="generateBill()">
+                <span id="lang-bill-btn">බිල්පත (Print)</span>
+            </button>
         </div>
     </div>
 
     <div id="page-settings" class="page">
-        <h2>සෙටින්ස්</h2>
+        <h2 id="lang-settings-title">සෙටින්ස්</h2>
         <div class="card">
-            <label>පෙනුම (Mode):</label>
-            <button class="btn" style="width:100%; border-radius:12px; margin-top:5px; background:var(--card); border:1px solid var(--glass-border);" onclick="toggleTheme()"><i class="fa fa-moon"></i> Dark / Light</button>
-            <br><br>
-            <label>පින්ටර් සම්බන්ධතාවය:</label>
-            <button class="btn" style="width:100%; border-radius:12px; background:linear-gradient(135deg, #6366f1, #8b5cf6); color:white;" onclick="alert('සොයමින්...')"><i class="fa fa-bluetooth"></i> Connect Bluetooth Printer</button>
-        </div>
+            <div class="input-group">
+                <label id="lang-language">භාෂාව (Language):</label>
+                <div class="language-switch">
+                    <button class="language-btn active" onclick="switchLanguage('si')" id="lang-btn-si">සිංහල</button>
+                    <button class="language-btn" onclick="switchLanguage('en')" id="lang-btn-en">English</button>
+                </div>
+            </div>
+            
+            <label id="lang-appearance">පෙනුම (Mode):</label>
+            <button class="language-btn" style="width:100%; margin-top:5px; margin-bottom: 15px;" onclick="toggleTheme()">
+                <i class="fa fa-moon"></i> <span id="lang-theme-btn">Dark / Light Mode</span>
+            </button>
+
+            <label>ප්‍රින්ටර් එක සම්බන්ධ කරන්න (Printer):</label>
+            <button id="btn-connect-printer" class="language-btn" style="width:100%; margin-top:5px; border-color: #2196F3; color: #2196F3;" onclick="connectPrinter()">
+                <i class="fa fa-print"></i> <span>Connect Bluetooth Printer</span>
+            </button>
+            <p id="printer-status" style="font-size: 11px; text-align: center; margin-top: 5px; color: gray;">Not Connected</p>
+            </div>
     </div>
 
     <div id="bill-ready">
         <center>
-            <h1 id="pb-title" style="color:#10b981;">සේවා බිල්පත</h1>
-            <p>Customer: <span id="pb-cust"></span></p>
+            <h1 id="pb-title">සේවා බිල්පත</h1>
+            <p id="pb-customer-label">පාරිභෝගිකයා: <span id="pb-cust"></span></p>
             <hr>
         </center>
         <p>දිනය: <span id="pb-date"></span></p>
@@ -633,105 +378,110 @@
         <p>අක්කරයක මිල: රු. <span id="pb-rate"></span></p>
         <hr>
         <h2 style="text-align:right">එකතුව: රු. <span id="pb-total"></span></h2>
-        <center><p style="margin-top:30px; font-size:12px; color:#64748b;">Generated by Govi Measure App</p></center>
+        <center><p style="margin-top:30px; font-size:12px;">Generated by Govi Measure App</p></center>
     </div>
 
     <div class="tab-bar">
-        <div class="tab active" onclick="showPage('map', this)"><i class="fa fa-map"></i>මැප් එක</div>
-        <div class="tab" onclick="showPage('bill', this)"><i class="fa fa-file-invoice"></i>බිල්පත</div>
-        <div class="tab" onclick="showPage('settings', this)"><i class="fa fa-sliders-h"></i>සෙටින්ස්</div>
+        <div class="tab active" onclick="showPage('map', this)">
+            <i class="fa fa-map"></i><span class="lang-tab-map">මැප් එක</span>
+        </div>
+        <div class="tab" onclick="showPage('bill', this)">
+            <i class="fa fa-file-invoice"></i><span class="lang-tab-bill">බිල්පත</span>
+        </div>
+        <div class="tab" onclick="showPage('settings', this)">
+            <i class="fa fa-sliders-h"></i><span class="lang-tab-settings">සෙටින්ස්</span>
+        </div>
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet.draw/1.0.4/leaflet.draw.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/leaflet-geometryutil@0.10.3/src/leaflet.geometryutil.min.js"></script>
 
-    <!-- Your JavaScript remains exactly the same -->
     <script>
-        // Init Map with extra zoom
+        // Core Logic
+        let language = 'si';
+        const translations = {
+            si: { 'search-placeholder': 'නගරය සොයන්න...', 'acres': 'අක්කර', 'marking': 'ලකුණු කරන්න', 'bill-head': 'බිල්පත් විස්තර', 'total-amount': 'මුළු මුදල:', 'bill-btn': 'බිල්පත (Print)', 'tab-map': 'මැප් එක', 'tab-bill': 'බිල්පත', 'tab-settings': 'සෙටින්ස්' },
+            en: { 'search-placeholder': 'Search City...', 'acres': 'Acres', 'marking': 'Marking', 'bill-head': 'Bill Details', 'total-amount': 'Total Amount:', 'bill-btn': 'Print Bill', 'tab-map': 'Map', 'tab-bill': 'Bill', 'tab-settings': 'Settings' }
+        };
+
+        // Bluetooth Variables
+        let printerDevice = null;
+        let printerCharacteristic = null;
+
+        function switchLanguage(lang) {
+            language = lang;
+            document.getElementById('lang-btn-si').classList.toggle('active', lang === 'si');
+            document.getElementById('lang-btn-en').classList.toggle('active', lang === 'en');
+            updateLanguageTexts();
+        }
+
+        function updateLanguageTexts() {
+            const t = translations[language];
+            document.getElementById('search-input').placeholder = t['search-placeholder'];
+            document.querySelectorAll('.lang-acres').forEach(el => el.textContent = t['acres']);
+            document.querySelectorAll('.lang-tab-map').forEach(el => el.textContent = t['tab-map']);
+            document.querySelectorAll('.lang-tab-bill').forEach(el => el.textContent = t['tab-bill']);
+            document.querySelectorAll('.lang-tab-settings').forEach(el => el.textContent = t['tab-settings']);
+        }
+
+        // Map Initialization
         var map = L.map('map', { zoomControl: false, maxZoom: 21 }).setView([7.8731, 80.7718], 15);
-        
-        var satellite = L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', {
-            maxZoom: 21, subdomains:['mt0','mt1','mt2','mt3']
-        }).addTo(map);
+        L.tileLayer('http://{s}.google.com/vt/lyrs=s,h&x={x}&y={y}&z={z}', { maxZoom: 21, subdomains:['mt0','mt1','mt2','mt3'] }).addTo(map);
 
         var drawnItems = new L.FeatureGroup();
         map.addLayer(drawnItems);
 
-        // Manual Marking (Dots)
         var drawControl = new L.Control.Draw({
-            draw: {
-                polygon: { allowIntersection: false, showArea: true, shapeOptions: { color: '#10b981' } },
-                polyline: false, rectangle: false, circle: false, marker: false, circlemarker: false
-            },
+            draw: { polygon: { allowIntersection: false, showArea: true, shapeOptions: { color: '#00ff00' } }, polyline: false, rectangle: false, circle: false, marker: false, circlemarker: false },
             edit: { featureGroup: drawnItems }
         });
-        map.addControl(drawControl);
 
         map.on(L.Draw.Event.CREATED, function (e) {
             drawnItems.clearLayers();
             var layer = e.layer;
             drawnItems.addLayer(layer);
             updateCalculations(layer);
-            
             layer.on('edit', function() { updateCalculations(layer); });
         });
 
-        // Search Function (Working Fix)
+        function showDrawTool(tool) { new L.Draw.Polygon(map, drawControl.options.draw.polygon).enable(); }
+
         async function searchPlace() {
-            let query = document.getElementById('search-input').value;
-            if(!query) return;
+            let q = document.getElementById('search-input').value;
+            if(!q) return;
             try {
-                let res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${query}, Sri Lanka`);
+                let res = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${q}, Sri Lanka`);
                 let data = await res.json();
-                if(data.length > 0) {
-                    map.setView([data[0].lat, data[0].lon], 17);
-                } else {
-                    alert("ස්ථානය හමු වුණේ නැත.");
-                }
-            } catch(e) { alert("සර්ච් එකේ ගැටලුවක්."); }
+                if(data.length > 0) map.setView([data[0].lat, data[0].lon], 17);
+            } catch(e) { console.error(e); }
         }
 
-        // GPS & Tracking
         let isTracking = false, watchId, trackPoints = [], trackPoly = L.polygon([], {color: '#f00'}).addTo(map);
-
         function toggleTracking() {
             if(!isTracking) {
-                isTracking = true;
-                trackPoints = [];
-                drawnItems.clearLayers();
-                document.getElementById('track-btn').classList.add('rec');
+                isTracking = true; trackPoints = []; drawnItems.clearLayers();
+                document.getElementById('gps-track-btn').classList.add('rec');
                 watchId = navigator.geolocation.watchPosition(p => {
                     let loc = [p.coords.latitude, p.coords.longitude];
-                    trackPoints.push(loc);
-                    trackPoly.setLatLngs(trackPoints);
-                    map.panTo(loc);
-                    updateCalculations(trackPoly);
+                    trackPoints.push(loc); trackPoly.setLatLngs(trackPoints);
+                    map.panTo(loc); updateCalculations(trackPoly);
                 }, null, { enableHighAccuracy: true });
             } else {
-                isTracking = false;
-                navigator.geolocation.clearWatch(watchId);
-                document.getElementById('track-btn').classList.remove('rec');
+                isTracking = false; navigator.geolocation.clearWatch(watchId);
+                document.getElementById('gps-track-btn').classList.remove('rec');
             }
         }
 
+        let currentAcres = 0;
         function updateCalculations(layer) {
             let latlngs = layer.getLatLngs();
-            if(latlngs.length === 0) return;
+            if(!latlngs.length) return;
             let areaSqM = L.GeometryUtil.geodesicArea(latlngs[0]);
             let acres = areaSqM / 4046.86;
-            
             currentAcres = acres;
             document.getElementById('acres-disp').innerText = acres.toFixed(2);
             document.getElementById('final-acres').innerText = acres.toFixed(2);
-            
-            // Sinhala Terms
-            let dec = acres % 1;
-            let text = Math.floor(acres) > 0 ? Math.floor(acres) + " අක්කර " : "";
-            if(dec > 0.15 && dec < 0.40) text += "කාලයි";
-            else if(dec >= 0.40 && dec < 0.65) text += "බාගයයි";
-            else if(dec >= 0.65 && dec < 0.90) text += "තුන්කාලයි";
-            document.getElementById('sinhala-disp').innerText = text || "මනින ලදී";
             calcTotal();
         }
 
@@ -744,21 +494,69 @@
         }
 
         function locateMe() { map.locate({setView: true, maxZoom: 18}); }
-        function clearMap() { drawnItems.clearLayers(); trackPoly.setLatLngs([]); currentAcres = 0; }
+        function clearMap() { 
+            drawnItems.clearLayers(); trackPoly.setLatLngs([]); 
+            currentAcres = 0; document.getElementById('acres-disp').innerText = '0.00';
+        }
         function toggleTheme() { document.body.classList.toggle('dark-mode'); }
         function calcTotal() {
             let rate = document.getElementById('unit-price').value || 0;
             document.getElementById('final-total').innerText = (currentAcres * rate).toLocaleString();
         }
 
+        // Bluetooth Printer Connection Logic
+        async function connectPrinter() {
+            try {
+                printerDevice = await navigator.bluetooth.requestDevice({
+                    filters: [{ services: ['000018f0-0000-1000-8000-00805f9b34fb'] }, { namePrefix: 'TP' }, { namePrefix: 'Inner' }],
+                    optionalServices: ['000018f0-0000-1000-8000-00805f9b34fb']
+                });
+                const server = await printerDevice.gatt.connect();
+                const service = await server.getPrimaryService('000018f0-0000-1000-8000-00805f9b34fb');
+                const characteristics = await service.getCharacteristics();
+                printerCharacteristic = characteristics[0];
+                document.getElementById('printer-status').innerText = "Connected: " + printerDevice.name;
+                document.getElementById('printer-status').style.color = "green";
+            } catch (error) {
+                console.error(error);
+                alert("Printer connection failed. Please ensure Bluetooth is on.");
+            }
+        }
+
+        async function printViaBluetooth(text) {
+            if (!printerCharacteristic) return;
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text + "\n\n\n");
+            await printerCharacteristic.writeValue(data);
+        }
+
         function generateBill() {
-            document.getElementById('pb-title').innerText = document.getElementById('job-name').value || "සේවා බිල්පත";
-            document.getElementById('pb-cust').innerText = document.getElementById('cust-name').value;
-            document.getElementById('pb-date').innerText = new Date().toLocaleDateString();
-            document.getElementById('pb-size').innerText = currentAcres.toFixed(2) + " Acres";
-            document.getElementById('pb-rate').innerText = document.getElementById('unit-price').value;
-            document.getElementById('pb-total').innerText = document.getElementById('final-total').innerText;
+            const custName = document.getElementById('cust-name').value;
+            const date = new Date().toLocaleDateString();
+            const size = currentAcres.toFixed(2) + " Acres";
+            const rate = document.getElementById('unit-price').value;
+            const total = document.getElementById('final-total').innerText;
+
+            document.getElementById('pb-cust').innerText = custName;
+            document.getElementById('pb-date').innerText = date;
+            document.getElementById('pb-size').innerText = size;
+            document.getElementById('pb-rate').innerText = rate;
+            document.getElementById('pb-total').innerText = total;
+
+            // Trigger Normal Web Print
             window.print();
+
+            // Trigger Bluetooth Print if connected
+            if (printerCharacteristic) {
+                let billText = `--- GOVI MEASURE ---\n` +
+                               `Date: ${date}\n` +
+                               `Customer: ${custName}\n` +
+                               `Size: ${size}\n` +
+                               `Rate: Rs.${rate}\n` +
+                               `Total: Rs.${total}\n` +
+                               `--------------------\n`;
+                printViaBluetooth(billText);
+            }
         }
     </script>
 </body>
